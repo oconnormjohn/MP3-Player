@@ -1,0 +1,44 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <link rel="icon" href="data:,"> <!-- silence favicon 404s -->
+  <link rel="manifest" href="manifest.json">
+  <title>Timing test</title>
+  <style>
+    body { font-family: system-ui, -apple-system, sans-serif; padding: 2rem; }
+    #msg { font-size: 1.6rem; margin: 0 0 0.5rem; }
+    #status { color:#666; }
+  </style>
+</head>
+<body>
+  <h1 id="msg">Loading…</h1>
+  <p id="status">Waiting for Service Worker…</p>
+
+  <script>
+    const t0 = performance.now();
+    function set(id, txt){ const el=document.getElementById(id); if(el) el.textContent = txt; }
+
+    // Show how long until first paint
+    window.addEventListener('DOMContentLoaded', () => {
+      const s = ((performance.now()-t0)/1000).toFixed(2);
+      set('msg', `Hello world — it works! (after ${s}s)`);
+    });
+
+    // Register the service worker so we can run offline from Home Screen
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('./sw.js').then(async reg => {
+        await navigator.serviceWorker.ready;
+        set('status', 'Service Worker ready ✔︎ (offline install will work)');
+      }).catch(err => {
+        set('status', 'SW registration failed: ' + err.message);
+      });
+    } else {
+      set('status', 'Service Worker not supported here.');
+    }
+  </script>
+</body>
+</html>
