@@ -1,121 +1,64 @@
-const statusEl = document.getElementById('status');
-function setStatus(t){ if(statusEl) statusEl.textContent = t; }
+const player = document.getElementById('player');
+const status = document.getElementById('status');
+const buttons = document.querySelectorAll('.song');
+const exitBtn = document.getElementById('exit');
 
-let currentBtn = null;
-let currentAudio = null;
+let current = null;
+let timeout = null;
 
-function encodePath(raw) {
-  const parts = raw.split('/');
-  const file = parts.pop();
-  return [...parts, encodeURIComponent(file)].join('/');
+function setStatus(msg) {
+  status.textContent = msg;
+  console.log(msg);
 }
 
-function setActive(btn) {
-  document.querySelectorAll('.song.active, .song.loading')
-    .forEach(b => b.classList.remove('active','loading'));
-  if (btn) btn.classList.add('active');
-  currentBtn = btn || null;
-}
-
-async function handleTap(btn){
-  const raw  = btn.dataset.src;
-  const safe = encodePath(raw);
-
-  if (currentAudio && currentAudio.dataset.src === safe) {
-    if (currentAudio.paused) {
-      try { await currentAudio.play(); setStatus('Resumed ' + safe); }
-      catch(e){ setStatus('Playback error: ' + e.message); }
+async function safePlay(src) {
+  if (player.src.endsWith(src)) {
+    if (!player.paused) {
+      player.pause();
+      setStatus('Paused');
+      return;
     } else {
-      currentAudio.pause();
-      setStatus('Paused ' + safe);
+      try { await player.play(); setStatus('Resumed'); } catch(e) { setStatus('Error resuming'); }
+      return;
     }
-    return;
   }
 
-  if (currentAudio) {
-    currentAudio.pause();
-    currentAudio.src = '';
-    currentAudio.load();
-    currentAudio = null;
-  }
+  buttons.forEach(b => b.classList.remove('active'));
+  current = buttons.find(b => b.dataset.src === src);
+  if (current) current.classList.add('active');
 
-  btn.classList.add('loading');
-  setStatus('Loading ' + safe);
+  player.src = src;
+  player.load();
+  setStatus('Loading…');
 
-  const audio = new Audio();
-  audio.dataset.src = safe;
-  audio.src = safe;
-  audio.volume = 1.0;
-  audio.preload = 'auto';
-  currentAudio = audio;
+  if (timeout) clearTimeout(timeout);
+  timeout = setTimeout(() => {
+    setStatus('Error before play: timeout after 10 s');
+    player.pause();
+  }, 10000);
 
-  const start = Date.now();
-  const tryPlay = async () => {
+  player.oncanplaythrough = async () => {
+    clearTimeout(timeout);
     try {
-      await audio.play();
-      btn.classList.remove('loading');
-      setActive(btn);
-      setStatus('Playing ' + safe);
+      await player.play();
+      setStatus('Playing ' + src);
     } catch (e) {
-      if (Date.now() - start < 10000) {
-        setTimeout(tryPlay, 500);
-      } else {
-        btn.classList.remove('loading');
-        setActive(null);
-        setStatus('Error before play: timeout after 10 s');
-      }
+      setStatus('Error playing: ' + e.message);
     }
   };
-  tryPlay();
-
-  audio.addEventListener('ended', () => { setStatus('Ended'); setActive(null); });
-  audio.addEventListener('pause', () => {
-    if (audio.currentTime>0 && audio.currentTime<audio.duration) setStatus('Paused');
-  });
-  audio.addEventListener('error', () => {
-    const e = audio.error;
-    setStatus('Error loading (' + (e ? e.code : '?') + '): ' + safe);
-    setActive(null);
-  });
 }
 
-document.querySelectorAll('.song').forEach(btn =>
-  btn.addEventListener('click', () => handleTap(btn))
-);
+buttons.forEach(btn => {
+  btn.addEventListener('click', () => safePlay(btn.dataset.src));
+});
 
-// ----- EXIT BUTTON -----
-function isStandalone() {
-  return (window.matchMedia && window.matchMedia('(display-mode: standalone)').matches)
-         || (typeof navigator !== 'undefined' && navigator.standalone === true);
-}
+player.addEventListener('ended', () => {
+  buttons.forEach(b => b.classList.remove('active'));
+  setStatus('Playback ended');
+});
 
-function tryCloseStrategies() {
+exitBtn.addEventListener('click', () => {
+  setStatus('Exit clicked — closing player');
+  player.pause();
   window.close();
-  try {
-    const w = window.open('', '_self');
-    if (w) w.close();
-  } catch {}
-  try { location.href = 'about:blank'; } catch {}
-}
-
-const exitBtn = document.getElementById('exitBtn');
-if (exitBtn) {
-  exitBtn.addEventListener('click', () => {
-    try {
-      if (currentAudio) {
-        currentAudio.pause();
-        currentAudio.src = '';
-        currentAudio.load();
-      }
-    } catch {}
-    tryCloseStrategies();
-    setTimeout(() => {
-      if (document.visibilityState === 'visible') {
-        const msg = isStandalone()
-          ? 'To exit, swipe up to go Home.'
-          : 'To exit this tab, tap the tabs button in Safari.';
-        setStatus(msg);
-      }
-    }, 250);
-  });
-}
+});

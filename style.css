@@ -1,51 +1,57 @@
 body {
-  font-family: sans-serif;
+  font-family: Garamond, serif;
   text-align: center;
   background: #fff;
-  margin: 0;
-  padding: 1rem;
+  color: #222;
+  margin: 2em;
 }
-.grid {
+
+h1 {
+  font-size: 1.8em;
+}
+
+#songList {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  gap: 1rem;
+  gap: 1em;
+  margin: 2em 0;
 }
+
 button.song {
-  width: 120px;
-  height: 120px;
-  border-radius: 60px;
-  border: none;
-  background: #4caf50;
+  background: #4CAF50;
   color: white;
-  font-weight: bold;
-  font-size: 0.9rem;
-  line-height: 1.1rem;
-  padding: 1rem;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-}
-.song.active {
-  box-shadow: 0 0 0 6px #2e7d32, 0 10px 24px rgba(0,0,0,0.35);
-  transform: scale(1.08);
-  background-color: #43a047;
-}
-.song.loading {
-  opacity: 0.7;
-  pointer-events: none;
-}
-.actions {
-  margin-top: 1rem;
-  display: flex;
-  justify-content: center;
-}
-button.exit {
-  padding: 0.9rem 1.2rem;
   border: none;
-  border-radius: 12px;
-  background: #c62828;
-  color: #fff;
-  font-size: 1rem;
-  font-weight: 700;
-  box-shadow: 0 6px 16px rgba(0,0,0,0.25);
+  border-radius: 50%;
+  width: 130px;
+  height: 130px;
+  font-size: 1em;
+  cursor: pointer;
+  transition: transform 0.2s, background 0.2s;
 }
-button.exit:active { transform: translateY(1px); }
+
+button.song.active {
+  background: #007bff;
+  transform: scale(1.1);
+}
+
+#exit {
+  background: #e53935;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  padding: 10px 20px;
+  font-size: 1em;
+  cursor: pointer;
+}
+
+audio {
+  margin-top: 1.5em;
+}
+
+#status {
+  font-family: monospace;
+  font-size: 0.9em;
+  color: #555;
+  margin-top: 1em;
+}

@@ -1,0 +1,9 @@
+{
+  "name": "Timing test",
+  "short_name": "Timing",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#ffffff"
+}

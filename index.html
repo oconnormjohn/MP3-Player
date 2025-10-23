@@ -1,44 +1,29 @@
-<!doctype html>
-<html>
+<!DOCTYPE html>
+<html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <link rel="icon" href="data:,"> <!-- silence favicon 404s -->
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Nativity Player (Offline)</title>
+  <link rel="stylesheet" href="style.css">
   <link rel="manifest" href="manifest.json">
-  <title>Timing test</title>
-  <style>
-    body { font-family: system-ui, -apple-system, sans-serif; padding: 2rem; }
-    #msg { font-size: 1.6rem; margin: 0 0 0.5rem; }
-    #status { color:#666; }
-  </style>
 </head>
 <body>
-  <h1 id="msg">Loading…</h1>
-  <p id="status">Waiting for Service Worker…</p>
+  <h1>Nativity Player (Offline)</h1>
+  <div id="songList">
+    <button class="song" data-src="mp3/Away in a MangerMOC.mp3">Away in a Manger</button>
+    <button class="song" data-src="mp3/Little Donkey.mp3">Little Donkey</button>
+    <button class="song" data-src="mp3/Love Shine a Light.mp3">Love Shine a Light</button>
+    <button class="song" data-src="mp3/Silent Night.mp3">Silent Night</button>
+    <button class="song" data-src="mp3/There's A Razzle And A Dazzle.mp3">There’s A Razzle And A Dazzle</button>
+    <button class="song" data-src="mp3/We Three Kings.mp3">We Three Kings</button>
+    <button class="song" data-src="mp3/We'd Like To Tell You A Story.mp3">We’d Like To Tell You A Story</button>
+    <button class="song" data-src="mp3/While Shepherds Watched.mp3">While Shepherds Watched</button>
+  </div>
 
-  <script>
-    const t0 = performance.now();
-    function set(id, txt){ const el=document.getElementById(id); if(el) el.textContent = txt; }
+  <button id="exit">Exit</button>
+  <audio id="player" controls></audio>
+  <p id="status"></p>
 
-    // Show how long until first paint
-    window.addEventListener('DOMContentLoaded', () => {
-      const s = ((performance.now()-t0)/1000).toFixed(2);
-      set('msg', `Hello world — it works! (after ${s}s)`);
-    });
-
-    // Register the service worker so we can run offline from Home Screen
-    if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register('./sw.js').then(async reg => {
-        await navigator.serviceWorker.ready;
-        set('status', 'Service Worker ready ✔︎ (offline install will work)');
-      }).catch(err => {
-        set('status', 'SW registration failed: ' + err.message);
-      });
-    } else {
-      set('status', 'Service Worker not supported here.');
-    }
-  </script>
+  <script src="script.js"></script>
 </body>
 </html>
