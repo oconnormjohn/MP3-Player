@@ -1,64 +1,84 @@
 const player = document.getElementById('player');
-const status = document.getElementById('status');
-const buttons = document.querySelectorAll('.song');
-const exitBtn = document.getElementById('exit');
+const statusEl = document.getElementById('status');
+const btns = Array.from(document.querySelectorAll('.song'));
 
-let current = null;
-let timeout = null;
+let currentBtn = null;
+let playTimeout = null;
 
-function setStatus(msg) {
-  status.textContent = msg;
-  console.log(msg);
+const setStatus = (t) => { statusEl.textContent = t || ''; console.log(t); };
+
+// Encode only the last path segment (the filename) so spaces/apostrophes work
+function encodePath(raw) {
+  const parts = raw.split('/');
+  const file = parts.pop();
+  return [...parts, encodeURIComponent(file)].join('/');
 }
 
-async function safePlay(src) {
-  if (player.src.endsWith(src)) {
-    if (!player.paused) {
-      player.pause();
-      setStatus('Paused');
-      return;
+function setActive(btn) {
+  btns.forEach(b => b.classList.remove('active','loading'));
+  if (btn) btn.classList.add('active');
+  currentBtn = btn || null;
+}
+
+async function playSrc(btn, rawSrc) {
+  const src = encodePath(rawSrc);
+
+  // Toggle if same track
+  if (currentBtn === btn && player.src.endsWith(src)) {
+    if (player.paused) {
+      try { await player.play(); setStatus('Resumed'); } catch(e){ setStatus('Resume error: ' + e.message); }
     } else {
-      try { await player.play(); setStatus('Resumed'); } catch(e) { setStatus('Error resuming'); }
-      return;
+      player.pause(); setStatus('Paused');
     }
+    return;
   }
 
-  buttons.forEach(b => b.classList.remove('active'));
-  current = buttons.find(b => b.dataset.src === src);
-  if (current) current.classList.add('active');
+  // Switch track
+  setActive(btn);
+  btn.classList.add('loading');
+  setStatus('Loading… ' + src);
+
+  // Clear any previous timeout
+  if (playTimeout) clearTimeout(playTimeout);
 
   player.src = src;
   player.load();
-  setStatus('Loading…');
 
-  if (timeout) clearTimeout(timeout);
-  timeout = setTimeout(() => {
-    setStatus('Error before play: timeout after 10 s');
-    player.pause();
-  }, 10000);
-
-  player.oncanplaythrough = async () => {
-    clearTimeout(timeout);
+  // Give Safari time to decode, then try to play; retry a few times up to 10s
+  const startedAt = performance.now();
+  const tryPlay = async () => {
     try {
       await player.play();
+      btn.classList.remove('loading');
       setStatus('Playing ' + src);
     } catch (e) {
-      setStatus('Error playing: ' + e.message);
+      if (performance.now() - startedAt < 10000) {
+        setTimeout(tryPlay, 400);
+      } else {
+        btn.classList.remove('loading');
+        setActive(null);
+        setStatus('Error before play: timeout after 10 s');
+      }
     }
   };
+  tryPlay();
 }
 
-buttons.forEach(btn => {
-  btn.addEventListener('click', () => safePlay(btn.dataset.src));
+btns.forEach(btn => btn.addEventListener('click', () => playSrc(btn, btn.dataset.src)));
+
+player.addEventListener('ended', () => { setActive(null); setStatus('Ended'); });
+player.addEventListener('pause', () => {
+  if (player.currentTime > 0 && player.currentTime < (player.duration || 1)) setStatus('Paused');
+});
+player.addEventListener('error', () => {
+  const e = player.error;
+  setActive(null);
+  setStatus('Error loading (' + (e ? e.code : '?') + '): ' + player.src);
 });
 
-player.addEventListener('ended', () => {
-  buttons.forEach(b => b.classList.remove('active'));
-  setStatus('Playback ended');
-});
-
-exitBtn.addEventListener('click', () => {
-  setStatus('Exit clicked — closing player');
-  player.pause();
+// Exit button (best-effort close)
+document.getElementById('exit')?.addEventListener('click', () => {
+  try { player.pause(); player.removeAttribute('src'); player.load(); } catch {}
   window.close();
+  setStatus('Exit clicked — closing player');
 });
