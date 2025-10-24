@@ -1,4 +1,4 @@
-// script.js v32
+// script.js Good01
 const player   = document.getElementById('player');
 const statusEl = document.getElementById('status');
 const buttons  = Array.from(document.querySelectorAll('.song'));
@@ -6,7 +6,7 @@ const buttons  = Array.from(document.querySelectorAll('.song'));
 const setStatus = (t) => { statusEl.textContent = t; console.log(t); };
 
 // show that this file is the one running
-setStatus('JS v32 loaded');
+setStatus('JS Good01 loaded');
 
 // Encode only the filename part so spaces/apostrophes work
 function encodePath(raw) {
