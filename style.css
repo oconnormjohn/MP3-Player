@@ -25,7 +25,7 @@ button.song {
   border-radius: 50%;
   width: 200px;
   height: 200px;
-  font-size: 3em;
+  font-size: 2em;
   cursor: pointer;
   transition: transform 0.2s, background 0.2s;
 }
