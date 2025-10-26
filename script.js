@@ -1,4 +1,4 @@
-// script.js v12
+// script.js v13
 const player   = document.getElementById('player');
 const statusEl = document.getElementById('status');
 const buttons  = Array.from(document.querySelectorAll('.song'));
@@ -6,7 +6,7 @@ const buttons  = Array.from(document.querySelectorAll('.song'));
 const setStatus = (t) => { statusEl.textContent = t; console.log(t); };
 
 // show that this file is the one running
-setStatus('JS v12 loaded (Manual edit in script.js)');
+setStatus('JS v13 loaded (Manual edit in script.js)');
 
 // Encode only the filename part so spaces/apostrophes work
 function encodePath(raw) {
