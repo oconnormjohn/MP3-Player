@@ -1,9 +1,9 @@
-const CACHE = 'nativity-player-v36';
+const CACHE = 'nativity-player-v38';
 const FILES = [
   './',
   './index.html',
   './style.css',
-  './script.js?v=36',
+  './script.js?v=38',
   './manifest.json',
   './mp3/Away in a MangerMOC.mp3',
   './mp3/Little Donkey.mp3',

@@ -6,7 +6,7 @@ const buttons  = Array.from(document.querySelectorAll('.song'));
 const setStatus = (t) => { statusEl.textContent = t; console.log(t); };
 
 // show that this file is the one running
-setStatus('JS v36 is loaded');
+setStatus('JS v38 is now loaded');
 
 // Encode only the filename part so spaces/apostrophes work
 function encodePath(raw) {
