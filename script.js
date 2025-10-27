@@ -20,6 +20,7 @@ function setActive(btn) {
   if (btn) btn.classList.add('active');
 }
 
+
 async function handleClick(btn) {
   const raw  = btn.dataset.src;          // e.g. "mp3/Little Donkey.mp3"
   const safe = encodePath(raw);          // e.g. "mp3/Little%20Donkey.mp3"
