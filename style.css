@@ -23,8 +23,8 @@ button.song {
   color: white;
   border: none;
   border-radius: 50%;
-  width: 200px;
-  height: 200px;
+  width: 180px;
+  height: 180px;
   font-size: 2em;
   cursor: pointer;
   transition: transform 0.2s, background 0.2s;
