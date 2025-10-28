@@ -40,18 +40,18 @@ button.song.active {
   color: white;
   border: none;
   border-radius: 6px;
-  padding: 10px 20px;
-  font-size: 1em;
+  padding: 25px 40px;
+  font-size: 2em;
   cursor: pointer;
 }
 
 audio {
-  margin-top: 1.5em;
+  margin-top: 2em;
 }
 
 #status {
   font-family: monospace;
-  font-size: 0.9em;
+  font-size: 2em;
   color: #555;
   margin-top: 1em;
 }
