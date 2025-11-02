@@ -10,7 +10,23 @@
 </head>
 <body>
   <h1>Nativity Song Player (Offline)</h1>
-  
+  <!-- Exit button (corner) -->
+<button id="exit" class="exit" aria-label="Exit">Exit</button>
+
+<!-- Helper overlay shown if we can't close the PWA -->
+<div id="exitHelp" class="kiosk-hint" hidden>
+  <div class="kiosk-panel">
+    <h2>Leaving the Player</h2>
+    <ol>
+      <li>Swipe up from the bottom to go Home.</li>
+      <li>If Guided Access is on: triple-click the Side/Home button, then enter the PIN.</li>
+    </ol>
+    <p>Or open this page in Safari:</p>
+    <a href="https://oconnormjohn.github.io/MP3-Player/" target="_blank" rel="noopener" class="open-safari">Open in Safari</a>
+    <button id="dismissHelp" class="secondary">Close</button>
+  </div>
+</div>
+
   <div id="songList">
     <button class="song" data-src="mp3/We'd Like To Tell You A Story.mp3">We’d Like To Tell You A Story</button>
     <button class="song" data-src="mp3/Little Donkey.mp3">Little Donkey</button> 
@@ -22,7 +38,6 @@
     <button class="song" data-src="mp3/Love Shine a Light.mp3">Love Shine a Light</button> 
   </div>
  
-  <button id="exit">Exit</button>
   <audio id="player" controls></audio>
   <p id="status"></p>
 
