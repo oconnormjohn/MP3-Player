@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Nativity Song Player (Offline)</title>
+  <link rel="icon" type="image/x-icon" sizes="48x48" href="/favicon.ico">
+  <link rel="stylesheet" href="style.css">
+  <link rel="manifest" href="manifest.json">
+</head>
+<body>
+  <h1>Nativity Song Player (Offline)</h1>
+  <!-- Exit button (corner) -->
+<button id="exit" class="exit" aria-label="Exit">Exit</button>
+
+<!-- Helper overlay shown if we can't close the PWA -->
+<div id="exitHelp" class="kiosk-hint" hidden>
+  <div class="kiosk-panel">
+    <h2>Leaving the Player</h2>
+    <ol>
+      <li>Swipe up from the bottom to go Home.</li>
+      <li>If Guided Access is on: triple-click the Side/Home button, then enter the PIN.</li>
+    </ol>
+    <p>Or open this page in Safari:</p>
+    <a href="https://oconnormjohn.github.io/MP3-Player/" target="_blank" rel="noopener" class="open-safari">Open in Safari</a>
+    <button id="dismissHelp" class="secondary">Close</button>
+  </div>
+</div>
+
+  <div id="songList">
+    <button class="song" data-src="mp3/We'd Like To Tell You A Story.mp3">We’d Like To Tell You A Story</button>
+    <button class="song" data-src="mp3/Little Donkey.mp3">Little Donkey</button> 
+    <button class="song" data-src="mp3/Away in a MangerMOC.mp3">Away in a Manger</button>
+    <button class="song" data-src="mp3/There's A Razzle And A Dazzle.mp3">There’s A Razzle And A Dazzle</button>
+    <button class="song" data-src="mp3/While Shepherds Watched.mp3">While Shepherds Watched</button> 
+    <button class="song" data-src="mp3/We Three Kings.mp3">We Three Kings</button>
+    <button class="song" data-src="mp3/Silent Night.mp3">Silent Night</button>
+    <button class="song" data-src="mp3/Love Shine a Light.mp3">Love Shine a Light</button> 
+  </div>
+ 
+  <audio id="player" controls></audio>
+  <p id="status"></p>
+
+ <script src="script.js?v=14" defer></script>
+ 
+<script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('sw.js').then(() => {
+        console.log('Service Worker registered');
+      }).catch(err => {
+        console.log('SW registration failed:', err);
+      });
+    });
+  }
+</script> 
+ 
+ 
+</body>
+</html>
