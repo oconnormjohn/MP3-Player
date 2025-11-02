@@ -55,3 +55,60 @@ audio {
   color: #555;
   margin-top: 1em;
 }
+/* Corner exit */
+.exit {
+  position: fixed;
+  top: 14px;
+  right: 14px; /* change to left:14px if you prefer top-left */
+  background: #e53935;
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  padding: 12px 18px;
+  font-size: 1.1em;
+  cursor: pointer;
+  box-shadow: 0 3px 8px rgba(0,0,0,.2);
+  z-index: 1000;
+}
+
+/* Overlay shown when we can't programmatically exit the PWA */
+.kiosk-hint {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+}
+.kiosk-hint[hidden] { display: none; }
+
+.kiosk-panel {
+  background: #fff;
+  color: #222;
+  border-radius: 14px;
+  padding: 18px 22px;
+  width: min(92vw, 560px);
+  text-align: left;
+  box-shadow: 0 10px 30px rgba(0,0,0,.25);
+}
+.kiosk-panel h2 { margin-top: 0; }
+
+.open-safari {
+  display: inline-block;
+  margin-top: 6px;
+  background: #007aff;
+  color: #fff;
+  text-decoration: none;
+  padding: 8px 12px;
+  border-radius: 8px;
+}
+.secondary {
+  margin-left: 8px;
+  background: #eee;
+  color: #222;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+}
