@@ -76,9 +76,36 @@ player.addEventListener('error',  () => {
   setStatus('Audio error (' + (e? e.code : '?') + '): ' + player.src);
 });
 
-// Exit (best-effort)
-document.getElementById('exit')?.addEventListener('click', () => {
-  try { player.pause(); player.removeAttribute('src'); player.load(); } catch {}
+// --- Exit handling (PWA/kiosk aware) ---
+const exitBtn = document.getElementById('exit');
+const exitHelp = document.getElementById('exitHelp');
+const dismissHelp = document.getElementById('dismissHelp');
+
+function inStandalone() {
+  // iOS: navigator.standalone; other: display-mode media query
+  return (window.navigator.standalone === true) ||
+         (window.matchMedia && window.matchMedia('(display-mode: standalone)').matches);
+}
+
+function tryExitNow() {
+  try { player.pause(); } catch {}
+  // Best-effort close (works if this tab was opened via window.open)
   window.close();
-  setStatus('Exit clicked — closing player');
-});
+
+  // If still here:
+  if (inStandalone()) {
+    // We can't programmatically leave a Home-screen PWA → show help + Safari escape
+    exitHelp.hidden = false;
+  } else {
+    // In normal Safari tab: just navigate away
+    location.href = 'about:blank';
+  }
+}
+
+// Long-press to avoid accidental exits
+let pressTimer;
+exitBtn.addEventListener('touchstart', () => { pressTimer = setTimeout(tryExitNow, 600); });
+exitBtn.addEventListener('touchend',   () => { clearTimeout(pressTimer); });
+exitBtn.addEventListener('click',      () => { tryExitNow(); });
+
+dismissHelp.addEventListener('click', () => { exitHelp.hidden = true; });
