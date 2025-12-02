@@ -1,4 +1,4 @@
-const CACHE = 'nativity-player-v14';
+const CACHE = 'nativity-player-v15';
 const FILES = [
   './',
   './index.html',
