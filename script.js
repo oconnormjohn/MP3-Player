@@ -1,4 +1,4 @@
-// script.js v13
+// script.js v14
 const player   = document.getElementById('player');
 const statusEl = document.getElementById('status');
 const buttons  = Array.from(document.querySelectorAll('.song'));
